@@ -1,6 +1,6 @@
 {
     "name": "taskmesh/sdk-php",
-    "version": "1.1.0",
+    "version": "1.1.2",
     "description": "Task Mesh Worker 埋点 SDK，用于向 Task Mesh 上报 runStart / runFinish / event",
     "type": "library",
     "keywords": [
