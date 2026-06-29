@@ -2,15 +2,12 @@
 
 namespace taskmesh\sdk;
 
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
-
 /**
  * Client 任务埋点 HTTP 客户端
  */
 class Client
 {
-    protected HttpClient $httpClient;
+    protected HttpTransport $transport;
 
     /**
      * Client 初始化
@@ -23,12 +20,9 @@ class Client
         protected string $baseUrl,
         protected string $token,
         int $timeout = 10,
-        ?HttpClient $httpClient = null
+        ?HttpTransport $transport = null
     ) {
-        $this->httpClient = $httpClient ?? new HttpClient([
-            'timeout'     => $timeout,
-            'http_errors' => false,
-        ]);
+        $this->transport = $transport ?? new HttpTransport($timeout);
     }
 
     /**
@@ -142,28 +136,29 @@ class Client
     protected function post(string $action, array $data): array
     {
         $url = rtrim($this->baseUrl, '/') . '/api/task.Track/' . $action;
-
-        try {
-            $response = $this->httpClient->post($url, [
-                'headers' => [
-                    'X-Task-Token' => $this->token,
-                    'Content-Type' => 'application/json; charset=utf-8',
-                    'Accept'       => 'application/json',
-                ],
-                'json' => $data,
-            ]);
-        } catch (GuzzleException $e) {
-            throw new Exception('埋点请求失败: ' . $e->getMessage(), 0, $e);
+        $body = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if ($body === false) {
+            throw new Exception('埋点请求序列化失败');
         }
 
-        $body   = (string)$response->getBody();
-        $result = json_decode($body, true);
+        $response = $this->transport->post($url, [
+            'X-Task-Token' => $this->token,
+            'Content-Type' => 'application/json; charset=utf-8',
+            'Accept'       => 'application/json',
+        ], $body);
+
+        $result = json_decode($response['body'], true);
         if (!is_array($result)) {
-            throw new Exception('埋点响应解析失败', $response->getStatusCode());
+            throw new Exception('埋点响应解析失败', $response['status']);
         }
 
-        if (($result['code'] ?? 0) !== 1) {
-            throw new Exception((string)($result['msg'] ?? '埋点请求失败'), (int)($result['code'] ?? 0));
+        if ((int)($result['code'] ?? 0) !== 1) {
+            $msg = trim((string)($result['msg'] ?? ''));
+            if ($msg === '') {
+                $msg = '埋点请求失败';
+            }
+            $msg .= ' response=' . json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            throw new Exception($msg, (int)($result['code'] ?? 0));
         }
 
         return is_array($result['data'] ?? null) ? $result['data'] : [];

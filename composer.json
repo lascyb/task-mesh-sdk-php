@@ -1,5 +1,6 @@
 {
     "name": "taskmesh/sdk-php",
+    "version": "1.1.0",
     "description": "Task Mesh Worker 埋点 SDK，用于向 Task Mesh 上报 runStart / runFinish / event",
     "type": "library",
     "keywords": [
@@ -8,8 +9,7 @@
         "worker",
         "tracking",
         "cron",
-        "sdk",
-        "guzzle"
+        "sdk"
     ],
     "license": "Apache-2.0",
     "homepage": "https://github.com/lascyb/task-mesh-sdk-php",
@@ -26,7 +26,7 @@
     "require": {
         "php": ">=8.0.2",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "^7.8"
+        "ext-curl": "*"
     },
     "autoload": {
         "psr-4": {

@@ -167,13 +167,21 @@ class Run
     }
 
     /**
-     * uuid 生成 run_id
+     * uuid 生成 run_id，UUID v7（时间有序）
      */
     protected static function uuid(): string
     {
+        $msec = (int)floor(microtime(true) * 1000);
         $data = random_bytes(16);
-        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
-        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+        $data[0] = chr(($msec >> 40) & 0xFF);
+        $data[1] = chr(($msec >> 32) & 0xFF);
+        $data[2] = chr(($msec >> 24) & 0xFF);
+        $data[3] = chr(($msec >> 16) & 0xFF);
+        $data[4] = chr(($msec >> 8) & 0xFF);
+        $data[5] = chr($msec & 0xFF);
+        $data[6] = chr((ord($data[6]) & 0x0F) | 0x70);
+        $data[8] = chr((ord($data[8]) & 0x3F) | 0x80);
 
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
