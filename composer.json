@@ -12,6 +12,11 @@
         "guzzle"
     ],
     "license": "Apache-2.0",
+    "homepage": "https://github.com/lascyb/task-mesh-sdk-php",
+    "support": {
+        "issues": "https://github.com/lascyb/task-mesh-sdk-php/issues",
+        "source": "https://github.com/lascyb/task-mesh-sdk-php"
+    },
     "authors": [
         {
             "name": "lascyb",

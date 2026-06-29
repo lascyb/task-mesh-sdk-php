@@ -2,6 +2,8 @@
 
 Task Mesh Worker 埋点 SDK（PHP），用于向 Task Mesh 服务上报任务执行生命周期与过程事件。
 
+仓库：[https://github.com/lascyb/task-mesh-sdk-php](https://github.com/lascyb/task-mesh-sdk-php)
+
 ## 要求
 
 - PHP >= 8.0.2
@@ -11,6 +13,22 @@ Task Mesh Worker 埋点 SDK（PHP），用于向 Task Mesh 服务上报任务执
 
 ```bash
 composer require taskmesh/sdk-php
+```
+
+未发布 Packagist 前，可直接从 GitHub 安装：
+
+```json
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/lascyb/task-mesh-sdk-php"
+        }
+    ],
+    "require": {
+        "taskmesh/sdk-php": "^1.0"
+    }
+}
 ```
 
 本地 path 开发：
