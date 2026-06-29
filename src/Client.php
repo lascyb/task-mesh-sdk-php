@@ -143,6 +143,7 @@ class Client
 
         $response = $this->transport->post($url, [
             'X-Task-Token' => $this->token,
+            'server'       => 'true',
             'Content-Type' => 'application/json; charset=utf-8',
             'Accept'       => 'application/json',
         ], $body);
